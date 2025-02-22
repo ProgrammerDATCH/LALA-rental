@@ -3,12 +3,18 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { authOptions } from '@/lib/auth'
 
-// GET /api/properties/[id]
+type Props = {
+  params: Promise<{
+    id: string
+  }>
+}
+
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  props: Props
 ) {
   try {
+    const params = await props.params
     const property = await prisma.property.findUnique({
       where: { id: params.id },
       include: {
@@ -39,12 +45,12 @@ export async function GET(
   }
 }
 
-// PUT /api/properties/[id]
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  props: Props
 ) {
   try {
+    const params = await props.params
     const session = await getServerSession(authOptions)
     if (!session?.user) {
       return NextResponse.json(
@@ -88,12 +94,12 @@ export async function PUT(
   }
 }
 
-// DELETE /api/properties/[id]
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  props: Props
 ) {
   try {
+    const params = await props.params
     const session = await getServerSession(authOptions)
     if (!session?.user) {
       return NextResponse.json(

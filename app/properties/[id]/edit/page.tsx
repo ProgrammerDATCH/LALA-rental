@@ -25,7 +25,6 @@ export default async function EditPropertyPage({ params }: EditPropertyPageProps
     notFound()
   }
 
-  // Check if the current user is the property owner
   if (property.hostId !== session.user.id) {
     redirect("/")
   }

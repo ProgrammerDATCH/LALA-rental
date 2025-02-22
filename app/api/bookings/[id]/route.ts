@@ -1,15 +1,20 @@
-// @ts-nocheck
 import { getServerSession } from 'next-auth'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { authOptions } from '@/lib/auth'
 
-// GET /api/bookings/[id]
+type Props = {
+  params: Promise<{
+    id: string
+  }>
+}
+
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  request: Request,
+  props: Props
 ) {
   try {
+    const params = await props.params
     const session = await getServerSession(authOptions)
     if (!session?.user) {
       return NextResponse.json(
@@ -39,7 +44,6 @@ export async function GET(
       )
     }
 
-    // Check if user is authorized to view this booking
     if (
       booking.renterId !== session.user.id &&
       booking.property.hostId !== session.user.id
@@ -59,12 +63,12 @@ export async function GET(
   }
 }
 
-// PUT /api/bookings/[id]
 export async function PUT(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  request: Request,
+  props: Props
 ) {
   try {
+    const params = await props.params
     const session = await getServerSession(authOptions)
     if (!session?.user) {
       return NextResponse.json(
@@ -73,7 +77,7 @@ export async function PUT(
       )
     }
 
-    const body = await req.json()
+    const body = await request.json()
     const { status } = body
 
     const booking = await prisma.booking.findUnique({
@@ -88,7 +92,6 @@ export async function PUT(
       )
     }
 
-    // Only host can confirm/cancel bookings
     if (booking.property.hostId !== session.user.id) {
       return NextResponse.json(
         { success: false, error: 'Not authorized to update this booking' },
