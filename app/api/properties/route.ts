@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json()
-    const { title, description, price, location } = body
+    const { title, description, price, location, imageUrl } = body
 
     const property = await prisma.property.create({
       data: {
@@ -54,7 +54,8 @@ export async function POST(req: NextRequest) {
         description,
         price,
         location,
-        hostId: session.user.id
+        hostId: session.user.id,
+        imageUrl
       }
     })
 

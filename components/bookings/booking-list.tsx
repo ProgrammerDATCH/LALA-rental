@@ -6,7 +6,7 @@ import { BookingCard } from "./booking-card"
 
 export async function BookingList() {
   const session = await getServerSession(authOptions)
-  if (!session) {console.log("NO SESSION");return null}
+  if (!session) {return null}
 
   const bookings = await prisma.booking.findMany({
     where: {

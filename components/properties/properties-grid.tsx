@@ -1,42 +1,15 @@
-import { prisma } from "@/lib/prisma"
 import { PropertyCard } from "./property-card"
+import type { Property, User } from "@prisma/client"
 
-interface PropertiesGridProps {
-  search: string | null
-  sort: string | null
+interface PropertyWithHost extends Property {
+  host: Pick<User, "name" | "image">
 }
 
-export async function PropertiesGrid({
-  search,
-  sort,
-}: PropertiesGridProps) {
-  const properties = await prisma.property.findMany({
-    where: {
-      OR: search
-        ? [
-            { title: { contains: search, mode: "insensitive" } },
-            { description: { contains: search, mode: "insensitive" } },
-            { location: { contains: search, mode: "insensitive" } },
-          ]
-        : undefined,
-    },
-    include: {
-      host: {
-        select: {
-          name: true,
-          image: true,
-        },
-      },
-    },
-    orderBy: sort
-      ? {
-          price: sort === "asc" ? "asc" : "desc",
-        }
-      : {
-          createdAt: "desc",
-        },
-  })
+interface PropertiesGridProps {
+  properties: PropertyWithHost[]
+}
 
+export function PropertiesGrid({ properties }: PropertiesGridProps) {
   if (!properties.length) {
     return (
       <div className="text-center">

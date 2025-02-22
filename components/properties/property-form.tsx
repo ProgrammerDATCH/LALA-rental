@@ -61,7 +61,7 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
       if (!response.ok) throw new Error("Failed to save property")
 
       toast.success(initialData ? "Property updated successfully" : "Property created successfully")
-      router.push("/dashboard/host")
+      router.push("/dashboard/host/properties")
       router.refresh()
     } catch (error) {
       toast.error("Something went wrong")
@@ -99,7 +99,7 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
             <FormItem>
               <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input placeholder="Cozy apartment in city center" {...field} />
+                <Input placeholder="Property Name" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -112,7 +112,7 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea placeholder="A beautiful apartment..." {...field} />
+                <Textarea placeholder="Property description..." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -125,7 +125,7 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
             <FormItem>
               <FormLabel>Price per night</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="100" {...field} />
+                <Input type="number" placeholder="Price in RWF" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -138,7 +138,7 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
             <FormItem>
               <FormLabel>Location</FormLabel>
               <FormControl>
-                <Input placeholder="New York, NY" {...field} />
+                <Input placeholder="Location of a property" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

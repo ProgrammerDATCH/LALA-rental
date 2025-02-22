@@ -9,7 +9,7 @@ export default async function CreatePropertyPage() {
 
   if (!session || session.user.role !== Role.HOST) {
     redirect("/")
-  }
+  }    
 
   return (
     <div className="container max-w-2xl py-10">

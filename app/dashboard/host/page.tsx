@@ -8,7 +8,6 @@ export default async function HostDashboardPage() {
   const session = await getServerSession(authOptions)
 
   if (!session || session.user.role !== Role.HOST) {
-    console.log("SESSION==> ", session!.user.role)
     redirect("/")
   }
 

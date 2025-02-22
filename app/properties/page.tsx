@@ -1,11 +1,18 @@
-// app/properties/page.tsx
+
 import { Suspense } from "react"
 import { PropertySearch } from "@/components/properties/property-search"
 import { PropertyFilters } from "@/components/properties/property-filters"
 import { FilteredProperties } from "@/components/properties/filtered-properties"
 import { Loading } from "@/components/ui/loading"
 
-export default function PropertiesPage() {
+interface PropertiesPageProps {
+  searchParams: {
+    search?: string
+    sort?: string
+  }
+}
+
+export default function PropertiesPage({ searchParams }: PropertiesPageProps) {
   return (
     <div className="container py-10">
       <div className="flex flex-col gap-8">
@@ -19,7 +26,7 @@ export default function PropertiesPage() {
           </Suspense>
         </div>
         <Suspense fallback={<Loading />}>
-          <FilteredProperties />
+          <FilteredProperties searchParams={searchParams} />
         </Suspense>
       </div>
     </div>

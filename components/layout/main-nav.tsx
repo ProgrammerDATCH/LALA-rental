@@ -26,6 +26,7 @@ import {
   LogOut
 } from "lucide-react"
 import { signOut } from "next-auth/react"
+import { ModeToggle } from "./mode-toggle"
 
 export function MainNav() {
   const pathname = usePathname()
@@ -120,6 +121,8 @@ export function MainNav() {
             ))}
           </nav>
         </div>
+
+        <ModeToggle />
 
         {session?.user ? (
           <div className="flex items-center gap-4">

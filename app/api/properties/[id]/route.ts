@@ -78,11 +78,11 @@ export async function PUT(
     }
 
     const body = await req.json()
-    const { title, description, price, location } = body
+    const { title, description, price, location, imageUrl } = body
 
     const updatedProperty = await prisma.property.update({
       where: { id: params.id },
-      data: { title, description, price, location }
+      data: { title, description, price, location, imageUrl }
     })
 
     return NextResponse.json({ success: true, data: updatedProperty })

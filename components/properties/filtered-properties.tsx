@@ -1,12 +1,43 @@
-'use client'
 
-import { useSearchParams } from 'next/navigation'
-import { PropertiesGrid } from './properties-grid'
+import { prisma } from "@/lib/prisma"
+import { PropertiesGrid } from "./properties-grid"
 
-export function FilteredProperties() {
-  const searchParams = useSearchParams()
-  const search = searchParams.get('search')
-  const sort = searchParams.get('sort')
+interface FilteredPropertiesProps {
+  searchParams: {
+    search?: string
+    sort?: string
+  }
+}
 
-  return <PropertiesGrid search={search} sort={sort} />
+export async function FilteredProperties({ searchParams }: FilteredPropertiesProps) {
+  const { search, sort } = searchParams
+
+  const properties = await prisma.property.findMany({
+    where: {
+      OR: search
+        ? [
+            { title: { contains: search, mode: "insensitive" } },
+            { description: { contains: search, mode: "insensitive" } },
+            { location: { contains: search, mode: "insensitive" } },
+          ]
+        : undefined,
+    },
+    include: {
+      host: {
+        select: {
+          name: true,
+          image: true,
+        },
+      },
+    },
+    orderBy: sort
+      ? {
+          price: sort === "asc" ? "asc" : "desc",
+        }
+      : {
+          createdAt: "desc",
+        },
+  })
+
+  return <PropertiesGrid properties={properties} />
 }
