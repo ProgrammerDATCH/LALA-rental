@@ -1,39 +1,16 @@
 'use client'
 
 import { useState } from "react"
-import { signIn, useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
 import { Role } from "@prisma/client"
 import { Button } from "@/components/ui/button"
-import { RoleSelect } from "@/components/auth/role-select"
-import { Icons } from "@/components/icons"
 import { toast } from "sonner"
-import { useRouter } from "next/navigation"
 
-export function RegisterForm() {
+export function RoleSelectionForm() {
   const router = useRouter()
   const { update: updateSession } = useSession()
-  const [role, setRole] = useState<Role>(Role.RENTER)
   const [isLoading, setIsLoading] = useState(false)
-
-  const handleRegister = async () => {
-    try {
-      setIsLoading(true)
-      const result = await signIn("google", { 
-        callbackUrl: "/role-selection", 
-        redirect: false
-      })
-
-      if (result?.ok) {
-        router.push("/role-selection")
-      } else {
-        // toast.error("Failed to sign in")
-      }
-    } catch (error) {
-      toast.error("Something went wrong")
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   const updateRole = async (selectedRole: Role) => {
     try {
@@ -58,15 +35,20 @@ export function RegisterForm() {
   }
 
   return (
-    <div className="grid gap-6">
-      {/* <RoleSelect selectedRole={role} onRoleChange={setRole} /> */}
+    <div className="grid gap-4">
       <Button
-        variant="outline"
-        onClick={handleRegister}
+        size="lg"
+        onClick={() => updateRole(Role.RENTER)}
         disabled={isLoading}
       >
-        <Icons.google className="mr-2 h-4 w-4" />
-        {isLoading ? "Loading..." : "Continue with Google"}
+        I want to rent
+      </Button>
+      <Button
+        size="lg"
+        onClick={() => updateRole(Role.HOST)}
+        disabled={isLoading}
+      >
+        I want to host
       </Button>
     </div>
   )

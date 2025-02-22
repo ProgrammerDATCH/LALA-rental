@@ -9,7 +9,7 @@ export function LoginForm() {
     <div className="grid gap-6">
       <Button
         variant="outline"
-        onClick={() => signIn("google", { callbackUrl: "/" })}
+        onClick={() => signIn("google", { callbackUrl: "/role-selection" })}
       >
         <Icons.google className="mr-2 h-4 w-4" />
         Continue with Google

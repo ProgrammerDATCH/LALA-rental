@@ -21,23 +21,60 @@ export const authOptions: NextAuthOptions = {
       if (account?.provider === "google") {
         const existingUser = await prisma.user.findUnique({
           where: { email: user.email! },
+          include: {
+            accounts: true
+          }
         })
 
         if (!existingUser) {
-          const role = (account.state as string)?.includes('HOST') ? Role.HOST : Role.RENTER
-          
-          const newUser = await prisma.user.create({
-            data: {
-              email: user.email!,
-              name: user.name,
-              image: user.image,
-              role: role,
-            },
-          })
-          
-          user.role = role
-          user.id = newUser.id
+          try {
+            const newUser = await prisma.user.create({
+              data: {
+                email: user.email!,
+                name: user.name,
+                image: user.image,
+                role: Role.RENTER,
+                hasSelectedRole: false,
+                accounts: {
+                  create: {
+                    type: account.type,
+                    provider: account.provider,
+                    providerAccountId: account.providerAccountId,
+                    access_token: account.access_token,
+                    token_type: account.token_type,
+                    id_token: account.id_token,
+                    scope: account.scope,
+                  }
+                }
+              }
+            })
+            
+            user.role = Role.RENTER
+            user.id = newUser.id
+          } catch (error) {
+            console.error("Error creating user:", error)
+            return false
+          }
         } else {
+          if (existingUser.accounts.length === 0) {
+            try {
+              await prisma.account.create({
+                data: {
+                  userId: existingUser.id,
+                  type: account.type,
+                  provider: account.provider,
+                  providerAccountId: account.providerAccountId,
+                  access_token: account.access_token,
+                  token_type: account.token_type,
+                  id_token: account.id_token,
+                  scope: account.scope,
+                }
+              })
+            } catch (error) {
+              console.error("Error creating account:", error)
+              return false
+            }
+          }
           user.role = existingUser.role
           user.id = existingUser.id
         }
