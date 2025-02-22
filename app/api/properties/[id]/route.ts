@@ -1,11 +1,11 @@
 import { getServerSession } from 'next-auth'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { authOptions } from '@/lib/auth'
 
 // GET /api/properties/[id]
 export async function GET(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -41,7 +41,7 @@ export async function GET(
 
 // PUT /api/properties/[id]
 export async function PUT(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -90,7 +90,7 @@ export async function PUT(
 
 // DELETE /api/properties/[id]
 export async function DELETE(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {

@@ -1,11 +1,11 @@
 import { getServerSession } from 'next-auth'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { authOptions } from '@/lib/auth'
 
 // GET /api/bookings/[id]
 export async function GET(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -60,7 +60,7 @@ export async function GET(
 
 // PUT /api/bookings/[id]
 export async function PUT(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
